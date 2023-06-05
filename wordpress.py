@@ -22,10 +22,11 @@ class wp:
         self.token = base64.b64encode(credentials.encode()).decode('utf-8')
         
 
-    def activate_plugin(self, plugin_slug, site) -> None:
+    def activate_plugin(self, plugin_slug, site) -> str:
         p = subprocess.run(f"wp plugin activate {plugin_slug} --path=/var/www/html --url=https://blogs-dev.butler.edu{site}", shell=True, capture_output=True)
         # print(p.stdout)
         print(f"{Fore.GREEN}{plugin_slug} was activated on {site}")
+        return p.stdout
     
 
     def get_user_blogs(self, user_blogs, mysql) -> None: 

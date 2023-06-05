@@ -4,5 +4,6 @@
     "username": "iaustin",
 
     "exclude_users": ["", "buwebservices", "buwebservice", "teststudent"],
-    "exclude_outside_users": ["", "manuscriptsbu", "butlerhillel", "importtest", "jefftest1", "jefftest2", "wpupdatestream", "testicrau"]
+    "exclude_outside_users": ["", "manuscriptsbu", "butlerhillel", "importtest", "jefftest1", "jefftest2", "wpupdatestream", "testicrau"],
+    "log_file": "plugin_stat.log"
 }
