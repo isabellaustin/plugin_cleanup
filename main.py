@@ -2,7 +2,7 @@ import json
 from wordpress import wp
 import colorama
 import mysql.connector
-# from tqdm import tqdm
+from tqdm import tqdm
 import logging
 
 def main(blogs) -> None:
@@ -11,7 +11,7 @@ def main(blogs) -> None:
     blogs.get_user_blogs(user_blogs, cnx)
     sites = user_blogs.values()
     logger.setLevel(logging.INFO)
-    
+
     for site in list(sites)[:3]:
         plugin_status = blogs.activate_plugin("classic-editor", site)
         logger.info(f"{site}: {plugin_status}")
