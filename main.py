@@ -12,7 +12,7 @@ def main(blogs) -> None:
     sites = user_blogs.values()
     logger.setLevel(logging.INFO)
 
-    for site in list(sites)[:3]:
+    for site in sites:
         plugin_status = blogs.activate_plugin("classic-editor", site)
         logger.info(f"{site}: {plugin_status}")
  
