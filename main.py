@@ -4,6 +4,7 @@ import colorama
 import mysql.connector
 from tqdm import tqdm
 import logging
+from phpserialize import *
 
 def main(blogs) -> None:
     """creates a list of blogs in the database"""
@@ -12,22 +13,26 @@ def main(blogs) -> None:
     sites = user_blogs.values()
     site_paths = list(user_blogs.values())
     site_ids = list(user_blogs.keys())
+    slug_status = {}
     
     logger.setLevel(logging.INFO)
 
-    # plugin = ""
-    # for site in sites:
-        # index = site_paths.index(f"{site}")
-        # site_id = site_ids[index]
+    for site in list(sites):
+        index = site_paths.index(f"{site}")
+        site_id = site_ids[index]
 
-        # # for slug in plugin_slug:
 
-        # plugin_status = blogs.activate_plugin(plugin, site, site_id,cnx)
-        # logger.info(f"{site}: {plugin_status}")
-        
-    plugin_status = blogs.activate_plugin('a:1:{i:0;s:33:"classic-editor/classic-editor.php";}', '/', 1,cnx)
-    print(plugin_status)
-    #what are we activating based on? blog_id and then getting serialised plugin string? or just getting the serialised plugin string initially
+        plugin_status = blogs.activate_plugin('a:1:{i:0;s:33:"classic-editor/classic-editor.php";}', site, site_id,cnx)
+        logger.info(f"{site}: {plugin_status}")
+    
+    # plugin_status = blogs.activate_plugin('a:1:{i:0;s:33:"classic-editor/classic-editor.php";}', '/', 1257,cnx,slug_status)
+    # print(plugin_status)
+   
+    '''
+    for site in sites:
+        blogs.activate_plugin("classic-editor", site)
+    
+    '''
 
     cnx.close()
 

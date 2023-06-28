@@ -24,23 +24,35 @@ class wp:
         self.token = base64.b64encode(credentials.encode()).decode('utf-8')
         
 
-    def activate_plugin(self, plugin, site, site_id,cnx) -> str:
+    def activate_plugin(self, plugin, site, site_id,cnx,) -> str:
         plugin_slug = wp.get_plugin_slug(self,plugin,site_id,cnx)
-        if plugin_slug != "":
-            p = subprocess.run(f"wp plugin activate {plugin_slug} --path=/var/www/html --url=https://blogs-dev.butler.edu{site}", shell=True, capture_output=True)
-            # print(p.stdout)
-            print(f"{Fore.GREEN}{plugin_slug} was activated on {site}")
-            return p.stdout
+        for slug in plugin_slug:
+            is_active = plugin_slug[slug]
+
+            if is_active:
+                print(f"{Fore.RED}{slug} was already active on {site}{Fore.RESET}")
+            else:
+                # p = subprocess.run(f"wp plugin activate {plugin_slug} --path=/var/www/html --url=https://blogs-dev.butler.edu{site}", shell=True, capture_output=True)
+                # print(p.stdout)
+                print(f"{Fore.GREEN}{slug} was activated on {site}{Fore.RESET}")
+                # return p.stdout
     
 
-    def deactivate_plugin(self, plugin_slug, site) -> str:
-        p = subprocess.run(f"wp plugin deactivate {plugin_slug} --path=/var/www/html --url=https://blogs-dev.butler.edu{site}", shell=True, capture_output=True)
-        # print(p.stdout)
-        print(f"{Fore.GREEN}{plugin_slug} was deactivated on {site}")
-        return p.stdout
+    def deactivate_plugin(self, plugin, site, site_id,cnx) -> str:
+        plugin_slug = wp.get_plugin_slug(self,plugin,site_id,cnx)
+        for slug in plugin_slug:
+            is_active = plugin_slug[slug]
+
+            if is_active:
+                # p = subprocess.run(f"wp plugin deactivate {plugin_slug} --path=/var/www/html --url=https://blogs-dev.butler.edu{site}", shell=True, capture_output=True)
+                # print(p.stdout)
+                print(f"{Fore.GREEN}{slug} was deactivated on {site}{Fore.RESET}")
+                # return p.stdout
+            else:
+                print(f"{Fore.RED}{slug} was already inactive on {site}{Fore.RESET}")
 
 
-    def get_plugin_slug(self, plugin, site_id:int, mysql) -> str:
+    def get_plugin_slug(self, plugin, site_id:int, mysql) -> list[str]:
         cursor = mysql.cursor()
         
         query = ('select option_value from wp_%s_options where option_name = "active_plugins"')
@@ -48,6 +60,7 @@ class wp:
 
         results = cursor.fetchall()
         site_plugins = []
+        slug_status = {}
 
         for r in results: #creates a list of the site's activated plugins 
             data = r[0]
@@ -56,26 +69,20 @@ class wp:
                 plugin_name = plugin_dict[p].decode() #'classic-editor/classic-editor.php'
                 slug = plugin_name.split("/")[0]
                 site_plugins.append(slug)
-        # print(list(plugin_dict.values()))
 
         data = plugin
-        pl = loads(data.encode())
-        # IF-ELSE: OPPOSITE FOR DEACTIVATE
-        if pl[0] not in list(plugin_dict.values()): #checks if suggested plugin is already activated
-            slug = pl[0].decode()
+        plugins = loads(data.encode())
+        for p in plugins:
+            slug = plugins[p].decode()
             plugin_slug = slug.split("/")[0]
 
-            cursor.close()
-
-            return plugin_slug
-        else:
-            slug = pl[0].decode()
-            plugin_slug = slug.split("/")[0]
-            print(f"{Fore.GREEN}{plugin_slug} was already active{Fore.RESET}")
-
-            cursor.close()
-
-            return ""
+            if plugins[p] not in list(plugin_dict.values()): #checks if suggested plugin is already activated
+                slug_status[plugin_slug] = False #NOT IN LIST; inactive
+            elif plugins[p] in list(plugin_dict.values()):
+                slug_status[plugin_slug] = True #IN LIST; active
+        
+        cursor.close()
+        return slug_status
 
 
     def get_user_blogs(self, user_blogs, mysql) -> None: 
@@ -94,3 +101,11 @@ class wp:
             user_blogs [blog_id] = path
         
         cursor.close()
+    
+    '''
+    def activate_plugin(self, plugin_slug, site) -> str:
+        p = subprocess.run(f"wp plugin activate {plugin_slug} --path=/var/www/html --url=https://blogs-dev.butler.edu{site}", shell=True, capture_output=True)
+        # print(p.stdout)
+        print(f"{Fore.GREEN}{plugin_slug} was activated on {site}")
+        return p.stdout
+    '''
