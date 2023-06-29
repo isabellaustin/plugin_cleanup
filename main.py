@@ -13,7 +13,6 @@ def main(blogs) -> None:
     sites = user_blogs.values()
     site_paths = list(user_blogs.values())
     site_ids = list(user_blogs.keys())
-    slug_status = {}
     
     logger.setLevel(logging.INFO)
 
@@ -21,12 +20,7 @@ def main(blogs) -> None:
         index = site_paths.index(f"{site}")
         site_id = site_ids[index]
 
-
-        plugin_status = blogs.activate_plugin('a:1:{i:0;s:33:"classic-editor/classic-editor.php";}', site, site_id,cnx)
-        logger.info(f"{site}: {plugin_status}")
-    
-    # plugin_status = blogs.activate_plugin('a:1:{i:0;s:33:"classic-editor/classic-editor.php";}', '/', 1257,cnx,slug_status)
-    # print(plugin_status)
+        blogs.activate_plugin('a:1:{i:0;s:33:"classic-editor/classic-editor.php";}', site, site_id,logger,cnx)
    
     '''
     for site in sites:

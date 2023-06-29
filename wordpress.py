@@ -24,32 +24,36 @@ class wp:
         self.token = base64.b64encode(credentials.encode()).decode('utf-8')
         
 
-    def activate_plugin(self, plugin, site, site_id,cnx,) -> str:
+    def activate_plugin(self, plugin, site, site_id,logger,cnx) -> str:
         plugin_slug = wp.get_plugin_slug(self,plugin,site_id,cnx)
-        for slug in plugin_slug:
+
+        for slug in list(plugin_slug.keys()):
             is_active = plugin_slug[slug]
 
             if is_active:
                 print(f"{Fore.RED}{slug} was already active on {site}{Fore.RESET}")
+                logger.info(f"{site}: {slug} was already active")
             else:
-                # p = subprocess.run(f"wp plugin activate {plugin_slug} --path=/var/www/html --url=https://blogs-dev.butler.edu{site}", shell=True, capture_output=True)
-                # print(p.stdout)
+                p = subprocess.run(f"wp plugin activate {slug} --path=/var/www/html --url=https://blogs-dev.butler.edu{site}", shell=True, capture_output=True)
+                status = p.stdout
                 print(f"{Fore.GREEN}{slug} was activated on {site}{Fore.RESET}")
-                # return p.stdout
+                logger.info(f"{site}: {status.decode()}")
     
 
-    def deactivate_plugin(self, plugin, site, site_id,cnx) -> str:
+    def deactivate_plugin(self, plugin, site, site_id,logger,cnx) -> str:
         plugin_slug = wp.get_plugin_slug(self,plugin,site_id,cnx)
-        for slug in plugin_slug:
+
+        for slug in list(plugin_slug.keys()):
             is_active = plugin_slug[slug]
 
             if is_active:
-                # p = subprocess.run(f"wp plugin deactivate {plugin_slug} --path=/var/www/html --url=https://blogs-dev.butler.edu{site}", shell=True, capture_output=True)
-                # print(p.stdout)
+                p = subprocess.run(f"wp plugin deactivate {slug} --path=/var/www/html --url=https://blogs-dev.butler.edu{site}", shell=True, capture_output=True)
+                status = p.stdout
                 print(f"{Fore.GREEN}{slug} was deactivated on {site}{Fore.RESET}")
-                # return p.stdout
+                logger.info(f"{site}: {status.decode()}")
             else:
                 print(f"{Fore.RED}{slug} was already inactive on {site}{Fore.RESET}")
+                logger.info(f"{site}: {slug} was already inactive")
 
 
     def get_plugin_slug(self, plugin, site_id:int, mysql) -> list[str]:
