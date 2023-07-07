@@ -46,7 +46,7 @@ if __name__ == "__main__":
     log_file = cfg['log_file']
 
     logger = logging.getLogger(__name__)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter('%(asctime)s - %(message)s')
     fh = logging.FileHandler(log_file, mode='w')
     fh.setFormatter(formatter)
     logger.addHandler(fh)
