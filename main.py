@@ -32,12 +32,13 @@ def main(blogs) -> None:
 
 if __name__ == "__main__":
     colorama.init(autoreset=True)
-    cnx = mysql.connector.connect(user="wordpress", password="4AbyJVrcPTH6aHgfAqt3", host="docker-dev.butler.edu", database="wp_blogs_dev")
 
     with open('config.json', 'r') as f:
         cfg=json.load(f)
         exclude_users = cfg["exclude_users"]
         exclude_outside_users = cfg["exclude_outside_users"]
+
+    cnx = mysql.connector.connect(user=cfg["db_username"], password=cfg["db_password"], host="docker-dev.butler.edu", database="wp_blogs_dev")
 
     blogs = wp(url = cfg["url"],
                 username = cfg["username"],

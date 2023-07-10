@@ -22,12 +22,12 @@ class wp:
     def make_cred(self) -> None:
         credentials = self.username + ":" + self.password
         self.token = base64.b64encode(credentials.encode()).decode('utf-8')
-        
+
 
     def activate_plugin(self, plugin, site, site_id,logger,cnx) -> str:
-        plugin_slug = wp.get_plugin_slug(self,plugin,site_id,cnx)
+        plugin_slug = wp.get_plugin_slug(self,plugin,site_id,cnx) #dict of the desired plugin (classin-editor) and if it's already active on the site or not
 
-        for slug in list(plugin_slug.keys()):
+        for slug in list(plugin_slug.keys()): #should only have one key
             is_active = plugin_slug[slug]
 
             if is_active:
@@ -38,7 +38,7 @@ class wp:
                 status = p.stdout
                 print(f"{Fore.GREEN}{slug} was activated on {site}{Fore.RESET}")
                 logger.info(f"{site}: {status.decode()}")
-    
+ 
 
     def deactivate_plugin(self, plugin, site, site_id,logger,cnx) -> str:
         plugin_slug = wp.get_plugin_slug(self,plugin,site_id,cnx)
@@ -80,7 +80,8 @@ class wp:
             slug = plugins[p].decode()
             plugin_slug = slug.split("/")[0]
 
-            if plugins[p] not in list(plugin_dict.values()): #checks if suggested plugin is already activated
+            #checks if suggested plugin is already activated
+            if plugins[p] not in list(plugin_dict.values()): 
                 slug_status[plugin_slug] = False #NOT IN LIST; inactive
             elif plugins[p] in list(plugin_dict.values()):
                 slug_status[plugin_slug] = True #IN LIST; active
