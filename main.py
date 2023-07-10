@@ -10,17 +10,15 @@ def main(blogs) -> None:
     """creates a list of blogs in the database"""
     user_blogs = {}
     blogs.get_user_blogs(user_blogs, cnx)
-    sites = user_blogs.values()
-    site_paths = list(user_blogs.values())
-    site_ids = list(user_blogs.keys())
     
     logger.setLevel(logging.INFO)
 
-    for site in list(sites):
-        index = site_paths.index(f"{site}")
-        site_id = site_ids[index]
+    for site in user_blogs.items():
+        site_id = site[0]
+        site_path = site[1]
+        print(site_id, site_path)
 
-        blogs.activate_plugin('a:1:{i:0;s:33:"classic-editor/classic-editor.php";}', site, site_id,logger,cnx)
+        blogs.activate_plugin('a:1:{i:0;s:33:"classic-editor/classic-editor.php";}', site_path, site_id,logger,cnx)
    
     '''
     for site in sites:
