@@ -16,15 +16,8 @@ def main(blogs) -> None:
     for site in user_blogs.items():
         site_id = site[0]
         site_path = site[1]
-        print(site_id, site_path)
 
         blogs.activate_plugin('a:1:{i:0;s:33:"classic-editor/classic-editor.php";}', site_path, site_id,logger,cnx)
-   
-    '''
-    for site in sites:
-        blogs.activate_plugin("classic-editor", site)
-    
-    '''
 
     cnx.close()
 

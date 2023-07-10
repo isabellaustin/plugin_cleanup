@@ -106,11 +106,3 @@ class wp:
             user_blogs [blog_id] = path
         
         cursor.close()
-    
-    '''
-    def activate_plugin(self, plugin_slug, site) -> str:
-        p = subprocess.run(f"wp plugin activate {plugin_slug} --path=/var/www/html --url=https://blogs-dev.butler.edu{site}", shell=True, capture_output=True)
-        # print(p.stdout)
-        print(f"{Fore.GREEN}{plugin_slug} was activated on {site}")
-        return p.stdout
-    '''
