@@ -1,6 +1,7 @@
 # Plugin cleanup
 
 This code is used to activate a plugin for all Wordpress sites on a per site basis after a plugin's network deactivation.
+
 Requires python 3.7 or newer
 
 ## Getting started
