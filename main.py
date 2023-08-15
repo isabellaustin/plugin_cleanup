@@ -2,12 +2,11 @@ import json
 from wordpress import wp
 import colorama
 import mysql.connector
-from tqdm import tqdm
 import logging
 from phpserialize import *
 
 def main(blogs) -> None:
-    """creates a list of blogs in the database"""
+    """creates a dict of blogs in the database"""
     user_blogs = {}
     blogs.get_user_blogs(user_blogs, cnx)
     
